@@ -46,7 +46,7 @@ change to the remote repository, if enabled with --push-on-write / -w.
 
 Example:
 
-notify-git -w -u username -p password -f /Library/Security/PolicyBanner.rtf"
+notify-git -w -u username -p password -f /Library/Security/PolicyBanner.rtf
 `,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
