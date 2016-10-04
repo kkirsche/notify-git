@@ -97,6 +97,7 @@ and notify git when a change is detected. In that event, `,
 				logrus.Debugln("Waiting for watcher event in goroutine...")
 				select {
 				case <-doneWatch:
+					// If we don't return, we get a ton of <nil> and "" events and errors.
 					return
 				case event := <-watcher.Events:
 					logrus.WithField("event", event.String()).Debugln("Watcher event received.")
