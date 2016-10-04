@@ -58,6 +58,7 @@ notify-git -w -u username -p password -f /Library/Security/PolicyBanner.rtf
 		}
 		logrus.Debugf("Git username: `%s`", gitUser)
 		logrus.Debugf("Git password: `%s`", gitPassword)
+		logrus.WithField("approved-domains", approvedDomains).Debugln("Approved certificate domains")
 
 		filePathArray := strings.Split(filePath, "/")
 
