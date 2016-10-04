@@ -28,11 +28,12 @@ import (
 )
 
 var (
-	gitUser     string
-	gitPassword string
-	filePath    string
-	pushOnWrite bool
-	verbose     bool
+	approvedDomains []string
+	gitUser         string
+	gitPassword     string
+	filePath        string
+	pushOnWrite     bool
+	verbose         bool
 )
 
 // RootCmd represents the base command when called without any subcommands
@@ -40,7 +41,13 @@ var RootCmd = &cobra.Command{
 	Use:   "notify-git",
 	Short: "Used to monitor a file for changes and notify git to push it to the cloud",
 	Long: `Notify git is a tool designed to monitor a single file for changes
-and notify git when a change is detected. In that event, `,
+and notify git when a change is detected. The tool will then attempt to push the
+change to the remote repository, if enabled with --push-on-write / -w.
+
+Example:
+
+notify-git -w -u username -p password
+`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
@@ -220,11 +227,10 @@ func credentialsCallback(url, username_from_url string, allowed_types git.CredTy
 }
 
 func certificateCheckCallback(cert *git.Certificate, valid bool, hostname string) git.ErrorCode {
-	domains := []string{"github.com"}
 	match := false
 
-	for _, domain := range domains {
-		if hostname == domain {
+	for _, domain := range approvedDomains {
+		if hostname == strings.TrimSpace(domain) {
 			match = true
 		}
 	}
@@ -257,4 +263,5 @@ func init() {
 	RootCmd.Flags().StringVarP(&filePath, "file-path", "f", "", "Path to file to monitor")
 	RootCmd.Flags().StringVarP(&gitUser, "git-user", "u", "", "Sets the username to use when prompted for credentials")
 	RootCmd.Flags().StringVarP(&gitPassword, "git-password", "p", "", "Sets the password to use when prompted for credentials")
+	RootCmd.Flags().StringSliceVarP(&approvedDomains, "approved-domains", "a", []string{"github.com"}, "Set of approved domains to allow during certificate check")
 }
